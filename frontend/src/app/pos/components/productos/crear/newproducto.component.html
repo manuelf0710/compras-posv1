@@ -1,0 +1,121 @@
+<div *ngIf="loading">
+    <!--<button type="button" class=" close" aria-label="Close" (click)="closeModal()">
+      <i class="fa fa-close text-darks"></i>
+    </button>--> 
+    <app-loading></app-loading>
+  </div> 
+  <form [formGroup]="formulario" novalidate  (ngSubmit)="guardar($event)">
+      <div class="modal-header ">
+        <h3 class="modal-title " id="modal-basic-title" >
+         <span *ngIf="!formulario.get('id').value"> Nuevo Producto </span>
+         <span *ngIf="formulario.get('id').value"> Editar Producto </span>
+        </h3>
+        <button type="button" class=" close" aria-label="Close" (click)="closeModal()">
+          <i class="fa fa-close"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <label for="exampleInputEmail1">Categoria</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa fa-th"></i></span>
+                    </div>
+                    <select name="" id="" class="form-control form-control-sm" formControlName="categoria_id">
+                        <option value="">Seleccione...</option>
+                        <option [value]="item.item" *ngFor="let item of arraytest">{{item.item}}</option>
+                    </select>
+                </div>
+                <div *ngIf="formulario.get('categoria_id').errors && formulario.get('categoria_id').touched">
+                    <small *ngIf="formulario.get('categoria_id').hasError('required')" class="form-text text-danger">el campo categoría no debe estar vacío.</small>
+                </div>                
+        </div>
+        <input type="hidden" id="id" formControlName="id" >
+            <!--
+            <div class="form-group">
+            <label for="exampleInputEmail1">Producto</label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fa fa-th"></i></span>
+                </div>
+                <input [readonly]="loading" type="text" class="form-control form-control-sm" placeholder="Ingrese la Categoria" formControlName="categoria_id" maxlength="100"  >
+            </div>
+                <div *ngIf="formulario.get('categoria_id').errors && formulario.get('categoria_id').touched">
+                    <small *ngIf="formulario.get('categoria_id').hasError('required')" class="form-text text-danger">el campo categoría no debe estar vacío.</small>
+                </div>
+            </div>-->
+            <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fa fa-code"></i></span>
+                </div>
+                <input [readonly]="loading" type="text" class="form-control form-control-sm" placeholder="Codigo" formControlName="codigo" maxlength="100"  >
+            </div>  
+            </div>  
+            <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fa fa-product-hunt"></i></span>
+                </div>
+                <input [readonly]="loading" type="text" class="form-control form-control-sm" placeholder="Ingrese la descripción" formControlName="descripcion" >
+            </div>
+                <div *ngIf="formulario.get('descripcion').errors && formulario.get('descripcion').touched">
+                    <small *ngIf="formulario.get('descripcion').hasError('required')" class="form-text text-danger">el campo descripción no debe estar vacío.</small>
+                </div>            
+            </div>
+            <div class="form-group">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa fa-check"></i></span>
+                    </div>
+                    <input [readonly]="loading" type="number" class="form-control form-control-sm" placeholder="stock" formControlName="stock" >
+                </div>
+                    <div *ngIf="formulario.get('stock').errors && formulario.get('stock').touched">
+                        <small *ngIf="formulario.get('stock').hasError('required')" class="form-text text-danger">el campo descripción no debe estar vacío.</small>
+                    </div>            
+            </div>             
+            <div class="row">
+            <div class="form-group col-lg-6 col-md-6">
+                <div class="">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fa fa-arrow-up"></i></span>
+                        </div>
+                        <input [readonly]="loading" type="text" class="form-control form-control-sm" placeholder="Precio Compra" formControlName="precio_compra" maxlength="100"  >
+                    </div>                    
+                </div>
+                
+            </div>           
+            <div class="form-group col-lg-6 col-md-6">
+                <div class="">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fa fa-arrow-down"></i></span>
+                        </div>
+                        <input [readonly]="loading" type="text" class="form-control form-control-sm" placeholder="Precio Venta" formControlName="precio_venta" maxlength="100"  >
+                    </div>                    
+                </div>                
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-8 offset-md-2">
+                <file-upload [fk_key]="formulario.get('id').value" [autoupload]="false" (ArchivosCargados)="getArchivos($event)" [title]="'Agregar Imagen'" [document_type]="'productos'" [accept_files_extension]="['jpg','jpeg','png']"></file-upload>
+            </div>
+        </div> 
+        <div class="form-group">
+            <div class="col-md-8 offset-md-2"> 
+                <div class="text-center" >
+                    <div class="text-center text-muted">Imágen Actual</div>
+                    <img [src]="api_url+'/'+formulario.get('imagen').value" alt="" width="200" *ngIf="formulario.get('imagen').value !=null && formulario.get('imagen').value !=''">                    
+                    <img [src]="api_url+'/uploads/productos/default/defaultproduct.png'" alt="" width="200" *ngIf="formulario.get('imagen').value == '' || formulario.get('imagen').value== null">
+                </div>
+            </div>
+          </div>        
+      </div>
+
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-dark" (click)="closeModal()" > Salir </button>
+        <button type="submit" class="btn btn-primary" [disabled]="formulario.invalid || loading"> Guardar </button>
+      </div>
+  </form>    

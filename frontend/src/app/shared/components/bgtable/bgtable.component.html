@@ -1,4 +1,5 @@
-<ngb-pagination
+<app-loading *ngIf="isSearching"></app-loading>
+<ngb-pagination *ngIf="tableConfig.paginatorPosition=='top' || tableConfig.paginatorPosition=='both'"
   [(page)]="currentPage"
   [pageSize]="pageSize"
   [collectionSize]="totalRecords"
@@ -9,7 +10,6 @@
   [rotate] = "true"
   (pageChange) ="pageChange($event)"
   size="sm"></ngb-pagination>
-<app-loading *ngIf="isSearching"></app-loading>
 <!--
   <div class="row">
         <ng-container *ngFor="let item of formSearch">
@@ -45,44 +45,70 @@
         <select (change)="onChangePaginationSize()" name="" id="" [(ngModel)]="pageSize" class=" mb-1 ml-1" style="width:40px;">
             <option [value]="le" *ngFor="let le of pageLength">{{le}}</option>
         </select> 
-    </div>    
+    </div>
 </div>
 <div class="col-md-12 col-lg-12 col-sm-12 col-12">
 
-    <div ngbDropdown class="d-idnline-block" display="static">
+    <div ngbDropdown class="d-idnline-block" display="static" #DropAdvancedSearch="ngbDropdown" >
         <span id="advancedsearch"  class="row">
-            <div class="col-md-12 col-lg-12 col-12">
+            <div class="col-md-6 col-lg-6 col-12">
                 <div class="input-group input-group-sm mb-1 float-right">
-                    <div class="input-group-prepend">
-                    <span class="input-group-text" id="inputGroup-sizing-sm"><i class="fa fa-search"></i></span>
+                    <div class="input-group-prepend" *ngIf="tableConfig.allSearch">
+                    <span class="input-group-text" id="inputGroup-sizing-sm" ngbDropdownToggle><i class="fa fa-search"></i></span>
                     </div>
-                    <input #globalSearch type="text" placeholder="Buscar" class="form-control form-control-sm" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
-                    <div class="input-group-append" ngbDropdownToggle>
-                        <span class="input-group-text" id="inputGroup-sizing-sm"><i class="fa fa-chevron-down"></i></span>
+                    <input [ngStyle]="tableConfig.allSearch ? {'display':'block'} : {'display': 'none'}" #globalsearch type="text" placeholder="Buscar" class="form-control form-control-sm" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                    <div class="input-group-append" ngbDropdownToggle *ngIf="!tableConfig.listado_seleccion">
+                        <span class="input-group-text" id="inputGroup-sizing-sm">Filtrar&nbsp;&nbsp;  <i class="fa fa-filter"></i></span>
                     </div>
-                    <div class="text-left" *ngIf="isSearching">
+                    <!--<div class="text-left" *ngIf="isSearching">
                         <i class="ml-1 fa fa-refresh fa-spin fa-2x"></i>
-                    </div>
+                    </div>-->
                 </div>
             </div> 
         </span>
         <div ngbDropdownMenu aria-labelledby="dropdownBasic1" class="col-md-12 col-lg-12" >
             <div class="form_search">
                 <div class="row">
-                    <div class="col-md-6 col-lg-6 col-12">
-                        aslf
-                    </div>
-                    <div class="col-md-6 col-lg-6 col-12">
-                        aslf
-                    </div>
-                    <div class="col-md-6 col-lg-6 col-12">
-                        aslf
-                    </div>
-                    <div class="col-md-6 col-lg-6 col-12">
-                        aslf
-                    </div>
+                    <ng-container *ngFor="let column of tableConfig.columns">
+                        <div class="col-md-3 col-lg-3 col-sm-6 col-6" *ngIf="column.type!='date' && column.searchable">
+                            <div class="form-group" >
+                                <label for="exampleInputEmail1" class="text-muted">{{column.title}}</label>
+                                <input  [type]="column.type" (blur)="SearchForRowFilter($event, column)" class="fz-11 rounded float-right form-control form-control-sm mb-1" [disabled]="!column.searchable"  placeholder="{{column.title}}">
+                            </div>
+                        </div>
+                          
+                        <div class="col-md-3 col-lg-3 col-6" *ngIf="column.type=='date' && column.searchable">
+                          <div class="form-group" >
+                            <label for="exampleInputEmaidl1" class="text-muted">{{column.title}}</label>
+                                <div class="input-group ">
+                                    <input  (dateSelect)="dateSeleccionado($event)" placeholder="dd/mm/yyyy"
+                                    name="dp" [(ngModel)]="paramSearchToObject[column.data]" ngbDatepicker #d="ngbDatepicker"  class="fz-11 rounded float-right form-control form-control-sm mb-3" style="height:20px" [disabled]="!column.searchable" readonly>
+                                    <div class="input-group-append">
+                                        <i  *ngIf="column.searchable"  class="fa fa-calendar" (click)="d.toggle()" ></i>
+                                    </div>
+                                </div>
+                          </div>
+                        </div>
+                        <!--<input *ngIf="column.type=='date'" [type]="column.type" (blur)="SearchForRowFilter($event, column)" class="fz-11 rounded float-right form-control form-control-sm mb-3" [disabled]="!column.searchable" style="height:20px">-->
+                        <!--
+                        <div class="form-group" *ngIf="column.type=='date' && column.searchable">
+                            <label for="columntitle" class="text-muted fz-12">(({{column.title}}))</label>
+                            <input  (dateSelect)="dateSeleccionado($event)" placeholder="dd/mm/yyyy"
+                             name="dp" [(ngModel)]="paramSearchToObject[column.data]" ngbDatepicker #d="ngbDatepicker"  class="fz-11 rounded float-right form-control form-control-sm mb-3" style="height:20px" [disabled]="!column.searchable" readonly>
+                        </div>-->
+
+                        <!--
+                         <div class="input-group " *ngIf="column.type=='date' && column.searchable">
+                            <label for="" class="text-muted">{{column.title}}</label>
+                             <input  (dateSelect)="dateSeleccionado($event)" placeholder="dd/mm/yyyy"
+                             name="dp" [(ngModel)]="paramSearchToObject[column.data]" ngbDatepicker #d="ngbDatepicker"  class="fz-11 rounded float-right form-control form-control-sm mb-3" style="height:20px" [disabled]="!column.searchable" readonly>
+                             <div class="input-group-append">
+                                 <i  *ngIf="column.searchable"  class="fa fa-calendar" (click)="d.toggle()"></i>
+                             </div>
+                         </div>-->
+                    </ng-container>
                     <div class="col-md-12 col-lg-12 col-12">
-                        <button class="btn btn-danger btn-sm float-right">Buscar <i class="fa fa-search" (click)="advancedSearch()"></i></button>
+                        <button class="btn btn-danger btn-sm float-right" (click)="advancedSearch(); DropAdvancedSearch.close();">Buscar <i class="fa fa-search" ></i></button>
                     </div>
                 </div>
             </div>
@@ -91,73 +117,36 @@
 </div>
 
 
-
-
-
-
-
-
-<!--
-<div class="col-md-8 col-lg-8 col-sm-8 col-8">
-
-    <div ngbDropdown class="d-idnline-block" display="dynamic">
-        <span id="advancedsearch" ngbDropdownToggle class="row">
-            <div class="col-md-10 col-lg-10 col-9">
-                <input #globalSearch type="text" placeholder="Buscar" class="form-control form-control-sm" aria-label="Small" aria-describedby="inputGroup-sizing-sm">            
-            </div>
-            <div class="col-md-2 col-lg-2 col-3">
-                <button class="btn btn-sm btn-success" style="margin-left: -4em;" ><i class="fa fa-caret-down"></i></button>
-            </div>
-        </span>
-        <div ngbDropdownMenu aria-labelledby="dropdownBasic1" class="col-md-12 col-lg-12">
-            <div class="form_search">
-                <div class="row">
-                    <div class="col-md-6 col-lg-6 col-12">
-                        aslf
-                    </div>
-                    <div class="col-md-6 col-lg-6 col-12">
-                        aslf
-                    </div>
-                    <div class="col-md-6 col-lg-6 col-12">
-                        aslf
-                    </div>
-                    <div class="col-md-6 col-lg-6 col-12">
-                        aslf
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>    
-</div>-->
-
-
-
-
 </div>
-<div class="col-md-12 col-lg-12 col-12">
+<div class="row">
+<div class="col-md-12 col-lg-12 col-sm-12 col-12" *ngIf="!tableConfig.listado_seleccion">
     <div class="float-right">
-    <div class="d-inline-block" ngbDropdown #myDrop="ngbDropdown">
-        <span  id="dropdownManual" ngbDropdownToggle class="font-weight-bold">Exportar <i class="fa fa-chevron-down"></i></span>
-        <div ngbDropdownMenu aria-labelledby="dropdownManual">
-            <button ngbDropdownItem  *ngFor="let item of tableConfig.buttons.exports" (click)="exportar(item)"><i class="fa fa-file-code-o"></i> {{item}}</button>
-        </div>
-      </div>    
-     </div>    
+        <div class="btn-group">
+            <button type="button" class="btn btn-light btn-sm">Exportar</button>
+            <div class="btn-group" ngbDropdown role="group" aria-label="Button group with nested dropdown">
+                <button class="btn btn-sm btn-light dropdown-toggle-split" ngbDropdownToggle><i class="fa fa-caret-down"></i></button>
+                <div class="dropdown-menu" ngbDropdownMenu>
+                    <button ngbDropdownItem  *ngFor="let item of tableConfig.buttons.exports" (click)="exportar(item)"><i class="fa fa-file-code-o"></i> {{item}}</button>
+                </div>
+            </div>
+        </div>  
+    </div>    
 </div>
-<table class="table table-hover table-bordered table-striped">
+</div>
+<table class="table table-hover table-bordered table-striped" *ngIf="template">
     <thead >
         <tr class="thead-dark" align="center">
             <th>#</th>
             <th></th>
             <th *ngFor="let column of tableConfig.columns">{{column.title}}</th>
         </tr>
+        <!--
         <tr align="center">
             <th colspan="2">
                 <button class="btn btn-sm btn-success btn-to-top" (click)="searchForRow()"> <i class="fa fa-search"></i> </button>
             </th>            
             <th *ngFor="let column of tableConfig.columns">
                <input *ngIf="column.type!='date' && column.searchable" [type]="column.type" (blur)="SearchForRowFilter($event, column)" class="fz-11 rounded float-right form-control form-control-sm mb-3" [disabled]="!column.searchable" style="height:20px">
-               <!--<input *ngIf="column.type=='date'" [type]="column.type" (blur)="SearchForRowFilter($event, column)" class="fz-11 rounded float-right form-control form-control-sm mb-3" [disabled]="!column.searchable" style="height:20px">-->
                 <div class="input-group " *ngIf="column.type=='date' && column.searchable">
                     <input  (dateSelect)="dateSeleccionado($event)" placeholder="dd/mm/yyyy"
                     name="dp" [(ngModel)]="paramSearchToObject[column.data]" ngbDatepicker #d="ngbDatepicker"  class="fz-11 rounded float-right form-control form-control-sm mb-3" style="height:20px" [disabled]="!column.searchable" readonly>
@@ -166,7 +155,7 @@
                     </div>
                 </div>
             </th>
-        </tr>        
+        </tr> -->
     </thead>
     <tbody>
         <ng-container *ngIf="!isSearching">
@@ -209,3 +198,18 @@
             </ng-container>
     </tbody>
 </table>
+<div *ngIf="!template" class="mb-3">
+   <ng-template [ngTemplateOutlet]="template" [ngOutletContext]="dataSource"></ng-template>
+</div>
+
+<ngb-pagination *ngIf="tableConfig.paginatorPosition=='bottom' || tableConfig.paginatorPosition=='both'"
+  [(page)]="currentPage"
+  [pageSize]="pageSize"
+  [collectionSize]="totalRecords"
+  [boundaryLinks] = "true"
+  [directionLinks] = "true"
+  [ellipses] = "true"
+  [maxSize] = "6"
+  [rotate] = "true"
+  (pageChange) ="pageChange($event)"
+  size="sm"></ngb-pagination>

@@ -13,13 +13,16 @@ import { BreadcrumbService } from 'xng-breadcrumb';
 export class AppComponent implements OnInit, AfterViewInit {
   title = 'compras-pos';
   currentUser: User;
+  currentYear:number;
 
   constructor(
     private authenticationService: AuthenticationService,
     private _router: Router,
     private breadcrumbService: BreadcrumbService 
   ) { 
-     this.authenticationService.currentUser.subscribe(x => this.currentUser = x);   
+     this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
+     const d = new Date();
+     this.currentYear = d.getFullYear();
   }  
 
   ngOnInit() {

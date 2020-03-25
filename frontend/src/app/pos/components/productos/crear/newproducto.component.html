@@ -23,8 +23,8 @@
                     </div>
                     <select name="" id="" class="form-control form-control-sm" formControlName="categoria_id">
                         <option value="">Seleccione...</option>
-                        <option [value]="item.item" *ngFor="let item of arraytest">{{item.item}}</option>
-                    </select>
+                        <option [value]="item.id" *ngFor="let item of categorias">{{item.nombre}}</option>
+                    </select>                    
                 </div>
                 <div *ngIf="formulario.get('categoria_id').errors && formulario.get('categoria_id').touched">
                     <small *ngIf="formulario.get('categoria_id').hasError('required')" class="form-text text-danger">el campo categoría no debe estar vacío.</small>

@@ -7,5 +7,5 @@ export interface BgTable {
     columns : [],
     url     : string,
     allSearch: boolean,
-    paginatorPosition: 'string',
+    paginatorPosition: string,
 }

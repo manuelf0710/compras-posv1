@@ -21,7 +21,8 @@ export class NewproductoComponent implements OnInit {
     status: 'close',
     data  : []
   }
-  public loading: boolean = false;  
+  public loading: boolean = false;
+  categorias = [];
   arraytest = [
     {item:1},
     {item:2},
@@ -40,6 +41,11 @@ export class NewproductoComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildForm();
+     this._CategoriasService.getCategorias().subscribe(
+      (res: any) => {
+        this.categorias = res
+      }
+    )
   }
 
   getArchivos(archivos_upload){ /*archivos subidos, desde fileuploadcomponent */

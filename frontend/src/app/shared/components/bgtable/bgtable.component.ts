@@ -1,6 +1,8 @@
 
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, TemplateRef } from '@angular/core';
 import { FormsModule,FormBuilder, FormGroup, FormArray } from '@angular/forms';
+import { fromEvent } from 'rxjs';
+import { debounceTime, map, distinctUntilChanged, filter } from 'rxjs/operators';
 import { BgtableService } from './bgtable.service';
 
 import { BgTable } from './modeltable';
@@ -24,20 +26,23 @@ export class BgtableComponent implements OnInit {
   public paramSearch: any[] = []; /* array properties searchables in tableConfig ["nombre", "documento"] */
   public paramSearchToObject: object = {}; /*variables de array pasados a objeto, para enviar en la petición httpparams del servicio */
   public pageLength = [
-    5,10,20,50,100
+    10,20,50,100
   ];
   public formHttpParams: object; 
   public model;
 
   @Input() tableConfig : BgTable;
+  @Input() template : TemplateRef<any>;
   @Output() editarAction :EventEmitter<Object>;
   @Output() eliminarAction :EventEmitter<Object>;
   @Output() copiarAction :EventEmitter<Object>;  
   @Output() exportarAction :EventEmitter<Object>;  
 
+  @ViewChild('globalsearch',  { static: true }) globalsearch: ElementRef;
+
   constructor(private _BgtableService : BgtableService) {
     this.isSearching = true;
-    this.pageSize = 5;
+    this.pageSize = 10;
     this.currentPage = 1;
     this.editarAction = new EventEmitter();
     this.eliminarAction = new EventEmitter();
@@ -74,9 +79,36 @@ export class BgtableComponent implements OnInit {
 
 
     this.loadTableData(this.tableConfig.url+'?pageSize='+this.pageSize);
+    this.listenEvent();
   }
+
+  listenEvent(){
+    fromEvent(this.globalsearch.nativeElement, 'keyup').pipe(
+      // get value
+      map((event: any) => {
+        return event.target.value;
+      })
+      // if character length greater then 2
+      ,filter(res => res.length > 2 || res.length == 0 )
+      // Time in milliseconds between key events
+      ,debounceTime(700)        
+      // If previous query is diffent from current   
+      ,distinctUntilChanged()
+      // subscription for response
+      ).subscribe((text: string) => {
+        console.log("antes");
+        this.currentPage = 1;
+        this.loadTableData(this.tableConfig.url+'?globalsearch='+text+'&page=1&pageSize='+this.pageSize);    
+        console.log("despues");
+      });     
+  }
+
   pageChange(pag){
     this.loadTableData(this.tableConfig.url+'?page='+pag+'&pageSize='+this.pageSize);
+  }
+  reloadTable(){
+    let searching = this.globalsearch.nativeElement.value;
+    this.loadTableData(this.tableConfig.url+'?globalsearch='+searching+'&page='+this.currentPage+'&pageSize='+this.pageSize);
   }
   public onChangePaginationSize(){
     this.currentPage = 1;
@@ -107,13 +139,15 @@ export class BgtableComponent implements OnInit {
     console.log(this.formSearch);
   }
   public exportar(evento:any){
-    let data = {url:'la url', export:evento }
-    this.exportarAction.emit(data);
+    //let data = {data:this.paramSearchToObject, export:evento }
+    this.paramSearchToObject['export'] = evento;
+    this.exportarAction.emit(this.paramSearchToObject);
   }
       
 
   public advancedSearch(){
-    
+    //console.log(this.paramSearchToObject);
+    this.onChangePaginationSize();
   }
   searchForRow(){
     //this.paramSearchToObject['fecha_nacimiento']='14/03/2020';
@@ -122,6 +156,23 @@ export class BgtableComponent implements OnInit {
   }
   dateSeleccionado(dato){
     console.log("el dateseleccionado es ",dato);
+  }
+
+  reload(param, data){
+    console.log("el valor de param es ",param)
+    //param == false ? this.reloadTable() : this.onChangePaginationSize() ;
+    param == false ? this.updateTable(data) :  this.dataSource.unshift(data) ;
+    /*if(!param){
+      this.dataSource.unshift(data);
+    }*/
+  }
+
+  updateTable(data){
+   const actualizar = this.dataSource.map(item =>{
+      if(data.id === item.id){ item = data;  return item; }
+      return item;
+    })
+    this.dataSource = actualizar;
   }
 
   loadTableData(url){

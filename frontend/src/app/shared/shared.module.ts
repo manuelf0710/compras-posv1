@@ -9,6 +9,10 @@ import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.componen
 
 import { UtilService } from './services/util.service';
 import { FilterforPipe } from './pipes/filterfor';
+import { sanitizeHtmlPipe } from './pipes/safehtml';
+import { ToastService } from './services/toast.service';
+
+
 
 import { FileUploadModule } from 'ng2-file-upload';
 import { FileUploadComponent } from './components/file-upload/file-upload.component';
@@ -17,6 +21,7 @@ import { PaginationComponent } from './components/datatablescustom/pagination.co
 import { TablevaluePipe } from './components/datatablescustom/tablevalue.pipe';
 import { SelectionlistComponent } from './components/selectionlist/selectionlist.component';
 import { BgtableComponent } from './components/bgtable/bgtable.component';
+import { ToastsContainerComponent } from './components/toasts-container/toasts-container.component';
 
 import { CustomAdapter, CustomDateParserFormatter, CustomDatepickerI18n, I18n  } from './services/datepicker.adapter';
 import {
@@ -32,11 +37,12 @@ import {
   declarations: [
     LoadingComponent, 
     BreadcrumbComponent, 
-    FilterforPipe, 
+    FilterforPipe,
+    sanitizeHtmlPipe,
     FileUploadComponent, 
     DatatablescustomComponent, 
     TablevaluePipe, 
-    PaginationComponent, SelectionlistComponent, BgtableComponent
+    PaginationComponent, SelectionlistComponent, BgtableComponent, ToastsContainerComponent
   ],
   imports: [
     CommonModule,
@@ -47,12 +53,14 @@ import {
   ],
   exports:[
     FilterforPipe,
+    sanitizeHtmlPipe,
     TablevaluePipe,
     LoadingComponent,
     FileUploadComponent,
     DatatablescustomComponent,
     PaginationComponent,
     BgtableComponent,
+    ToastsContainerComponent
 
   ],
   providers:[
@@ -66,6 +74,7 @@ export class SharedModule {
       ngModule: SharedModule,
       providers: [
          UtilService,
+         ToastService,
          I18n,
          {provide: NgbDatepickerI18n, useClass: CustomDatepickerI18n},
          {provide: NgbDateAdapter, useClass: CustomAdapter},

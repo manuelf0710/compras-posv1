@@ -2,6 +2,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {/* HttpClientModule,*/ HTTP_INTERCEPTORS } from '@angular/common/http';
 import { SharedModule } from './../shared/shared.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { PosRoutingModule } from './pos-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -27,6 +28,7 @@ import { ReporteventaComponent } from './components/ventas/reporteventa/reportev
 import { CategoriasService } from './components/categorias/categorias.service';
 import { NewcategoriaComponent } from './components/categorias/crear/newcategoria.component';
 import { NewproductoComponent } from './components/productos/crear/newproducto.component';
+import { NewClienteComponent } from './components/clientes/crear/new-cliente.component';
 /*import { TableCategoriaComponent } from './components/categorias/table-categoria.component';
 import { TablevaluePipe } from './components/categorias/tablevalue.pipe';
 import { PaginationComponent } from './components/categorias/pagination.component'; */
@@ -47,7 +49,7 @@ import { PaginationComponent } from './components/categorias/pagination.componen
                 CrearventaComponent, 
                 ReporteventaComponent, 
                 NewcategoriaComponent, 
-                NewproductoComponent, 
+                NewproductoComponent, NewClienteComponent, 
                 /*TableCategoriaComponent, 
                 TablevaluePipe, 
                 PaginationComponent,*/
@@ -55,6 +57,7 @@ import { PaginationComponent } from './components/categorias/pagination.componen
   imports: [
     CommonModule,
     PosRoutingModule,
+    NgbModule,
     //HttpClientModule
     SharedModule,
     FormsModule,

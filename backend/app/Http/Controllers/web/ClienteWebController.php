@@ -1,21 +1,28 @@
 <?php
 
-namespace App\Http\Controllers\pos;
+namespace App\Http\Controllers\web;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
 use App\Models\pos\Cliente;
 use Yajra\Datatables\Datatables;
+use Barryvdh\DomPDF\Facade as PDF;
 
-class ClienteController extends Controller
+class ClienteWebController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function listado(Request $request)
+	public function listado(Request $request){
+        $clientes = Cliente::withoutTrashed()->get();
+		$pdf = PDF::loadView('pdf.clientes', compact('clientes'));		
+		return $pdf->stream();
+	}
+	
+    public function listado2(Request $request)
     {
         $pageSize = $request->get('pageSize');
 		$pageSize == '' ? $pageSize = 20 : $pageSize;
@@ -84,34 +91,8 @@ class ClienteController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    { 
-		//$validator = $request->validate(Cliente::$rules);
-		
-		$validator = Validator::make( $request->all() , Cliente::$rules, Cliente::$customMessages );	
-		//exit("aqui entro");
-		$modelo = new Cliente();
-		 if(!($validator -> fails())){
-			$modelo->nombre = $request->nombre;
-			$modelo->documento = $request->documento;
-			$modelo->email = $request->email;
-			$modelo->telefono = $request->telefono;
-			$modelo->direccion = $request->direccion;
-			$modelo->fecha_nacimiento = $request->fecha_nacimiento;
-			$modelo->save();
-		  	$response = array(
-			  'status' => 'ok',
-			  'data'   => $modelo,
-			  'msg'    => 'Guardado'
-			);
-		 }else{
-			 
-			 $response = array(
-			 	'status' => 'error',
-				'msg' => $validator->errors(),
-				'validator'=> $validator 
-			 );
-		 }
-		 return response()->json($response); 
+    {
+        //
     }
 
     /**
@@ -145,32 +126,7 @@ class ClienteController extends Controller
      */
     public function update(Request $request, $id)
     {
-		//$validator = $request->validate(Producto::$rules);
-		$rules = Cliente::rules($request, $request->documento);
-		$validator = Validator::make( $request->all() , $rules , Cliente::$customMessages );
-		
-		$modelo = Cliente::find( $id );
-		 if(!($validator -> fails())){
-			$modelo->nombre = $request->nombre;
-			$modelo->documento = $request->documento;
-			$modelo->email = $request->email;
-			$modelo->telefono = $request->telefono;
-			$modelo->direccion = $request->direccion;
-			$modelo->fecha_nacimiento = $request->fecha_nacimiento;
-			$modelo->save();
-		  	$response = array(
-			  'status' => 'ok',
-			  'data'   => $modelo,
-			  'msg'    => 'Actualizado',
-			);
-		 }else{
-			 $response = array(
-			 	'status' => 'error',
-				'msg' => $validator->errors(),
-				'validator'=> $validator 
-			 );
-		 }
-		 return response()->json($response);         
+        //
     }
 
     /**

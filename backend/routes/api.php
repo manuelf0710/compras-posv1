@@ -49,7 +49,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
 	Route::group([
     'prefix' => 'pos',
 	], function () {
-		Route::get('prueba', 'ModuloController@prueba');
+		//Route::get('prueba', 'ModuloController@prueba');
 		Route::get('categorias', 'pos\CategoriaController@index');
 		Route::post('categorias', 'pos\CategoriaController@store');
 		Route::put('categorias/{id}', 'pos\CategoriaController@update');
@@ -58,7 +58,11 @@ Route::group(['middleware' => ['jwt.auth']], function () {
 		Route::post('productos', 'pos\ProductoController@index');
 		Route::post('productos', 'pos\ProductoController@store');
 		Route::put('productos/{id}', 'pos\ProductoController@update');
-		//Route::post('productos', 'ProductoController@store');
+		
 		Route::post('clienteslist', 'pos\ClienteController@listado');
+		Route::post('clientes', 'pos\ClienteController@store');
+		Route::put('clientes/{id}', 'pos\ClienteController@update');
+		
+		
 	});
 });

@@ -1,5 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { environment } from './../../../../environments/environment';
+
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
+import { NewClienteComponent } from './crear/new-cliente.component';
+
+import { BgtableComponent } from './../../../shared/components/bgtable/bgtable.component';
+
 
 @Component({
   selector: 'app-clientes',
@@ -7,6 +14,7 @@ import { environment } from './../../../../environments/environment';
   styleUrls: ['./clientes.component.css']
 })
 export class ClientesComponent implements OnInit {
+  @ViewChild(BgtableComponent) dataTableReload: BgtableComponent;
   public formSearch : Array<object> = [];
   buttons =  {
     acciones: {
@@ -15,7 +23,6 @@ export class ClientesComponent implements OnInit {
       'copy': true,
       },
     exports: ['excel', 'csv', 'pdf',],
-    listado_seleccion : false
   };
   columns=[
     {
@@ -54,13 +61,6 @@ export class ClientesComponent implements OnInit {
       type:'text'
     },          
     {
-      title : 'Fecha nacimiento',
-      data:'fecha_nacimiento',
-      orderable: false,
-      searchable:true,
-      type:'date'
-    },
-    {
       title : 'compras',
       data:'compras',
       orderable: false,
@@ -73,30 +73,59 @@ export class ClientesComponent implements OnInit {
       orderable: false,
       searchable:true,
       type:'date'
-    },              
-    {
-      title : 'Ingreso al Sistema',
-      data:'fecha_ingreso',
-      orderable: false,
-      searchable:true,
-      type:'date'
-    },              
+    },
   ];
 
   tableConfig = {
     buttons: this.buttons,
+    listado_seleccion : false,
     columns : this.columns,
     url     : environment.apiUrl+'/pos/clienteslist',
     allSearch: true,
-    paginatorPosition: 'top'
+    paginatorPosition: 'bottom',
   }  
-  constructor() { }
+  constructor(private modalService: NgbModal) {
+   }
 
   ngOnInit() {
   }
+  redrawTable(redraw, data){
+    this.dataTableReload.reload(redraw, data);
+  }
 
-  editar(data){
-    console.log(data);
+  agregar(){
+    const modalRef = this.modalService.open(NewClienteComponent,{
+      backdrop: 'static',
+      size: 'xs',
+      keyboard: false
+    });
+  
+    modalRef.result.then((result) => {
+      if(result.status == 'ok'){
+        this.redrawTable(true, result.data.data);
+      }
+    }).catch((error) => {
+      console.log("error en agregarcliente component ",error)
+    });
+  }
+
+  public editar(cliente: any){
+    const modalRef = this.modalService.open(NewClienteComponent,{
+      backdrop: 'static',
+      size: 'lg',
+      keyboard: false
+    });
+    modalRef.componentInstance.data = cliente; 
+    modalRef.result.then((result) => {
+      console.log("el resultado fue  ",result);
+     
+      if(result.status == 'ok'){
+        //this.loadProductos();
+        this.redrawTable(false, result.data.data);
+      }
+    }).catch((error) => {
+    });    
+
   }
 
   copiar(data){

@@ -6,6 +6,9 @@ export interface BgTable {
     listado_seleccion: boolean,
     columns : [],
     url     : string,
-    allSearch: boolean,
+    globalSearch: boolean,
+    rowSearch: boolean,
+    advancedSearch:boolean,
     paginatorPosition: string,
+    customFilters?: []
 }

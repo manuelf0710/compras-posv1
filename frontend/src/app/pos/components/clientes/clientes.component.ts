@@ -1,10 +1,12 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { environment } from './../../../../environments/environment';
-
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-
+/*services */
+import { UtilService } from './../../../shared/services/util.service';
+import { ToastService } from './../../../shared/services/toast.service';
+import { ClientesService } from './clientes.service';
+/*components */
 import { NewClienteComponent } from './crear/new-cliente.component';
-
 import { BgtableComponent } from './../../../shared/components/bgtable/bgtable.component';
 
 
@@ -15,12 +17,16 @@ import { BgtableComponent } from './../../../shared/components/bgtable/bgtable.c
 })
 export class ClientesComponent implements OnInit {
   @ViewChild(BgtableComponent) dataTableReload: BgtableComponent;
+  @ViewChild('testTemplate', { static: true }) testTemplate: TemplateRef<any>;
+  @ViewChild('itemTemplate', { static: true }) itemTemplate: TemplateRef<any>;
   public formSearch : Array<object> = [];
+  listItem = [];
   buttons =  {
     acciones: {
       'edit': true,
       'delete': true,
-      'copy': true,
+      'copy': false,
+      'new': true,
       },
     exports: ['excel', 'csv', 'pdf',],
   };
@@ -64,36 +70,40 @@ export class ClientesComponent implements OnInit {
       title : 'compras',
       data:'compras',
       orderable: false,
-      searchable:true,
+      searchable:false,
       type:'number'
     },              
     {
       title : 'Ultima Compra',
       data:'ultima_compra',
       orderable: false,
-      searchable:true,
+      searchable:false,
       type:'date'
     },
   ];
 
   tableConfig = {
     buttons: this.buttons,
-    listado_seleccion : false,
+    listado_seleccion : true,
     columns : this.columns,
     url     : environment.apiUrl+'/pos/clienteslist',
-    allSearch: true,
+    globalSearch: false,
+    rowSearch:true,
+    advancedSearch: true,    
     paginatorPosition: 'bottom',
+    customFilters: []
   }  
-  constructor(private modalService: NgbModal) {
+  constructor(private modalService: NgbModal, private _UtilService: UtilService, private _ClientesService: ClientesService, private _ToastService: ToastService)  {
    }
 
   ngOnInit() {
+    
   }
-  redrawTable(redraw, data){
-    this.dataTableReload.reload(redraw, data);
+  redrawTable(data){
+    this.dataTableReload.reload(data);
   }
 
-  agregar(){
+  agregar(evento:any){
     const modalRef = this.modalService.open(NewClienteComponent,{
       backdrop: 'static',
       size: 'xs',
@@ -102,7 +112,7 @@ export class ClientesComponent implements OnInit {
   
     modalRef.result.then((result) => {
       if(result.status == 'ok'){
-        this.redrawTable(true, result.data.data);
+        this.redrawTable(result.data.data);
       }
     }).catch((error) => {
       console.log("error en agregarcliente component ",error)
@@ -121,7 +131,7 @@ export class ClientesComponent implements OnInit {
      
       if(result.status == 'ok'){
         //this.loadProductos();
-        this.redrawTable(false, result.data.data);
+        this.redrawTable(result.data.data);
       }
     }).catch((error) => {
     });    
@@ -132,10 +142,35 @@ export class ClientesComponent implements OnInit {
     console.log(data);
   }
   eliminar(data){
-    console.log(data);
-  }
+    this._UtilService.confirm({ title:'Eliminar Registro', message: 'Seguro que desea eliminar este cliente?' }).then(
+      () => {
+        //console.log('deleting...');
+        this._ClientesService.eliminar(data.id)
+        .subscribe(
+          (result:any)=>{
+            if(result['code']==200){
+              this.dataTableReload.reload(result.data);
+              this._ToastService.success(result.msg+' Correctamente');
+            }
+          },
+          (error)=>{
+            console.log("el error fue ",error);
+            
+          }
+        )
+      },
+      () => {
+        //console.log('not deleting...');
+      });
+  } 
   exportar(data){
     console.log('exportar ',data);
+  }
+
+  generarView(data){
+    //this.renderTemplate++;
+    this.listItem = data;
+    console.log("entro intemlist ",this.listItem);
   }
 
 }

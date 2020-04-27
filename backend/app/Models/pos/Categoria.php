@@ -31,4 +31,12 @@ class Categoria extends Model
 	public function productos(){
 		return $this->hasMany(Producto::class);
 	}
+	public function scopeCategoria($query, $cat){
+		if($cat)
+			return $query->where('nombre', 'like', "%$cat%");
+	}
+	public function scopeGlobalSearch($query, $cat){		
+		if($cat)
+			return $query->where('nombre', 'like', "%$cat%");
+	}	
 }

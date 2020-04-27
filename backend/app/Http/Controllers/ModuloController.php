@@ -13,6 +13,16 @@ class ModuloController extends Controller
 		$response = ModuloLink::withoutTrashed()->where('modulo',  $id_modulo)->where('estado', 1)->get();
 		return $response;
 	}
+	public function getSubmenu($id_page){
+		$response = [];
+		$response = ModuloLink::withoutTrashed()->where('padre',  $id_page)->where('estado', 1)->get();
+		return $response;
+	}	
+	public function administracionPos(){
+		$response = $this->getSubmenu(12);
+		return response()->json($response); 
+	}
+	
 	public function prueba(){
 		//return 'dentro de prueba';
         $modulos =  Modulo::withoutTrashed()->where('estado',  1)->get();

@@ -15,6 +15,7 @@ class CreateVentasTable extends Migration
     {
         Schema::create('ventas', function (Blueprint $table) {
             $table->bigIncrements('id');
+			$table->Integer('codigo_factura')->unsigned()->comment('codigo de la factura');
 			$table->Integer('cliente_id')->unsigned()->comment('fk clientes.id');
 			$table->Integer('vendedor_id')->unsigned()->comment('fk usuarios.id');
 			$table->Integer('comision_id')->unsigned()->comment('fk usuarios.id');

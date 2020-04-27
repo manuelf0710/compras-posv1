@@ -31,6 +31,7 @@ import {
   NgbDateParserFormatter,
   NgbDatepickerI18n,
 } from '@ng-bootstrap/ng-bootstrap';
+import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
 
 
 @NgModule({
@@ -42,7 +43,7 @@ import {
     FileUploadComponent, 
     DatatablescustomComponent, 
     TablevaluePipe, 
-    PaginationComponent, SelectionlistComponent, BgtableComponent, ToastsContainerComponent
+    PaginationComponent, SelectionlistComponent, BgtableComponent, ToastsContainerComponent, AutocompleteComponent,
   ],
   imports: [
     CommonModule,
@@ -60,7 +61,8 @@ import {
     DatatablescustomComponent,
     PaginationComponent,
     BgtableComponent,
-    ToastsContainerComponent
+    ToastsContainerComponent,
+    AutocompleteComponent
 
   ],
   providers:[

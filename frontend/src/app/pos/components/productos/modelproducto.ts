@@ -7,5 +7,8 @@ export interface Producto {
         stock: number,
 		precio_compra:number,
 		precio_venta:number,
-		ventas:number
+        ventas:number,
+        porcentaje:number,
+        impuesto_id:number,
+        precio_ventaimpuesto:number
 }

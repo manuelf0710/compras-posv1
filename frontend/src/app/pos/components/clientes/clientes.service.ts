@@ -14,14 +14,11 @@ export class ClientesService {
 public guardar(data){
   if(data.id == null){
     return this._http.post<any>(`${environment.apiUrl}/pos/clientes`, data);
-    /*return this._http.post<any>(`${environment.apiUrl}/pos/clientes`,data)
-    .pipe(map(lista => {
-      console.log("error de la lista en clientes service ",lista);
-       const retorno = lista;
-       return retorno;
-    }));*/
   }else{
     return this._http.put<any>(`${environment.apiUrl}/pos/clientes/`+data.id, data);
   }
+}
+public eliminar(id){
+  return this._http.delete<any>(`${environment.apiUrl}/pos/clientes/`+id)
 }
 }

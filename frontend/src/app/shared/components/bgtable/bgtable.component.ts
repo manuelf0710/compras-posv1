@@ -1,5 +1,4 @@
-
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, TemplateRef } from '@angular/core';
+import { Component,  OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, TemplateRef } from '@angular/core';
 import { FormsModule,FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { fromEvent } from 'rxjs';
 import { debounceTime, map, distinctUntilChanged, filter } from 'rxjs/operators';
@@ -13,7 +12,7 @@ import { environment } from './../../../../environments/environment';
   templateUrl: './bgtable.component.html',
   styleUrls: ['./bgtable.component.css']
 })
-export class BgtableComponent implements OnInit { 
+export class BgtableComponent implements  OnInit { 
   public api_url = environment.server_root;
   public dataSource : any[]; 
   public isSearching: boolean;
@@ -30,13 +29,20 @@ export class BgtableComponent implements OnInit {
   ];
   public formHttpParams: object; 
   public model;
+  public lastAction = null; /* ultima acción  1 nuevo, editar, eliminar*/
+
 
   @Input() tableConfig : BgTable;
+  @Input() customFilters:  Array<object> = [];
+  @Input() pkey = 'id';
+  @Input() lengthSize = 3;
   @Input() template : TemplateRef<any>;
   @Output() editarAction :EventEmitter<Object>;
   @Output() eliminarAction :EventEmitter<Object>;
   @Output() copiarAction :EventEmitter<Object>;  
-  @Output() exportarAction :EventEmitter<Object>;  
+  @Output() exportarAction :EventEmitter<Object>; 
+  @Output() nuevoAction :EventEmitter<Object>; 
+  @Output() dataSourceExport :EventEmitter<Object>; 
 
   @ViewChild('globalsearch',  { static: true }) globalsearch: ElementRef;
 
@@ -48,38 +54,48 @@ export class BgtableComponent implements OnInit {
     this.eliminarAction = new EventEmitter();
     this.copiarAction = new EventEmitter();    
     this.exportarAction = new EventEmitter();    
-    console.log("los httpparams ",this.formHttpParams);
+    this.nuevoAction = new EventEmitter();  
+    this.dataSourceExport = new EventEmitter();  
    }
-
   ngOnInit(): void {
+    this.createParamsForm();
+    this.loadTableData(this.tableConfig.url+'?pageSize='+this.pageSize);
+    this.listenEvent();
+  }
+  createParamsForm(){
     this.tableConfig.columns.forEach(element => {
-      //console.log(element)
-        if(element['searchable']){
-        this.formSearch.push({title: element['title'], key:element['data'], value:'', type:element['type']});
-      }
-    });
-
-    console.log('formulario search',this.formSearch);
+      if(element['searchable']){
+      let theData: any = element['data'];
+      let getKey = theData.split('.');
+      let theKey = getKey.length > 1 ? getKey[0] : getKey[0];
+      //this.formSearch.push({title: element['title'], key:element['data'], value:'', type:element['type'], options: []});
+      this.formSearch.push({title: element['title'], key: theKey, value:'', type:element['type'], options: []});
+    }
+  });
+  
+  if(this.tableConfig['customFilters']){
+    this.tableConfig['customFilters'].forEach(element => {
+      let options = [];
+      if(element['type'] == 'select'){ options = element['options']; }
+      this.formSearch.push({title: element['title'], key:element['key'], value:'', type:element['type'], options: options});
+  });  
+  } 
+  this.customFilters.forEach(item=>{
+    let options = [];
+    if(item['type'] == 'select'){ options = item['options']; } 
+    this.formSearch.push({title: item['title'], key:item['key'], value:'', type:item['type'], options: options});
+  });
+  this.paramSearch = this.formSearch.map(item =>{
+    return item['key'];
+  })
+  /*
     for(let i=0; i < this.formSearch.length; i++){
         this.paramSearch.push(this.formSearch[i]['key'])     
-      }
-     // paramSearchToObject
+    }
+    */
     for(let i = 0; i < this.paramSearch.length; i++){
       this.paramSearchToObject[this.paramSearch[i]] = '';
     }
-    console.log("elobjetosearch",this.paramSearchToObject);
-/*
-      for(let i = 0; i < fields.length; i++){
-        if(fields[i]==columna.data){ 
-         obj[fields[i]] = valor;
-       }else{
-        obj[fields[i]] = '';
-      }
-    } */     
-
-
-    this.loadTableData(this.tableConfig.url+'?pageSize='+this.pageSize);
-    this.listenEvent();
   }
 
   listenEvent(){
@@ -89,18 +105,38 @@ export class BgtableComponent implements OnInit {
         return event.target.value;
       })
       // if character length greater then 2
-      ,filter(res => res.length > 2 || res.length == 0 )
+      ,filter(res => res.length > this.lengthSize || res.length == 0 )
       // Time in milliseconds between key events
       ,debounceTime(700)        
       // If previous query is diffent from current   
       ,distinctUntilChanged()
       // subscription for response
       ).subscribe((text: string) => {
-        console.log("antes");
         this.currentPage = 1;
         this.loadTableData(this.tableConfig.url+'?globalsearch='+text+'&page=1&pageSize='+this.pageSize);    
-        console.log("despues");
       });     
+  }
+
+  cleanAdvancedSearch(){
+    let keySearch = Object.keys(this.paramSearchToObject);
+    keySearch.map(item =>{  this.paramSearchToObject[item]='' });
+    //this.formSearch[0]['iterator'] = this.formSearch[0]['iterator']+1;
+    this.advancedSearch();
+  }
+
+  iconExports(n){
+    let code = {name:'code', icon:'fa fa-file-code-o'};
+    let iconExport = [
+      {name: "excel", icon: 'fa fa-file-excel-o'},
+      {name: "pdf", icon: 'fa fa-file-pdf-o'},
+      {name: "text", icon: 'fa fa-file-text'},
+      {name: "csv", icon: 'fa fa-file-text'},
+      {name: "imprimir", icon: 'fa fa-print'},
+    ];
+    let found = iconExport.find(element => element.name == n);
+    if(found) return found.icon
+    else 
+    return code.icon;
   }
 
   pageChange(pag){
@@ -115,69 +151,86 @@ export class BgtableComponent implements OnInit {
     this.loadTableData(this.tableConfig.url+'?page=1&pageSize='+this.pageSize);
   }
   SearchForRowFilter(evento, columna){
-    /*console.log("el evento ",evento.target.value);
-    console.log("la columna ",columna);
-    console.log("el formsearch ",this.formSearch);*/
-    this.paramSearchToObject[columna.data] = evento.target.value;
-
-    console.log("la columna",columna);
-    console.log("el objeto a enviar",this.paramSearchToObject);
+    let property = columna.hasOwnProperty('data');
+    if(property){  
+      let theData: any = columna.data;
+      let getKey = theData.split('.');
+      let theKey = getKey.length > 1 ? getKey[0] : getKey[0];
+       this.paramSearchToObject[theKey] = evento.target.value;
+      }
+      else{
+        this.paramSearchToObject[columna.key] = evento.target.value;
+      }
     if(evento.target.value == '') return;
-    
   }
 
   public editarRow(evento:any){
+    this.lastAction = 2; /* editar registro */
     this.editarAction.emit(evento);
   }
   public copiarRow(evento:any){
     this.copiarAction.emit(evento);
   }
   public eliminarRow(evento:any){
+    this.lastAction = 3; /* eliminar registro */
     this.eliminarAction.emit(evento);
   }
+  public nuevoRegistro(evento:any){
+    this.lastAction = 1; /* nuevo registro */
+    this.nuevoAction.emit(evento);
+  }  
   public verFormulario(){
     console.log(this.formSearch);
   }
   public exportar(evento:any){
-    //let data = {data:this.paramSearchToObject, export:evento }
     this.paramSearchToObject['export'] = evento;
     this.exportarAction.emit(this.paramSearchToObject);
+  }
+
+  exportarSource(){
+    if(this.template){
+      this.dataSourceExport.emit(this.dataSource);
+    }
   }
       
 
   public advancedSearch(){
-    //console.log(this.paramSearchToObject);
     this.onChangePaginationSize();
   }
   searchForRow(){
-    //this.paramSearchToObject['fecha_nacimiento']='14/03/2020';
-    console.log(this.paramSearchToObject);
     this.onChangePaginationSize();
   }
   dateSeleccionado(dato){
-    console.log("el dateseleccionado es ",dato);
   }
 
-  reload(param, data){
-    console.log("el valor de param es ",param)
+  reload( data){
     //param == false ? this.reloadTable() : this.onChangePaginationSize() ;
-    param == false ? this.updateTable(data) :  this.dataSource.unshift(data) ;
-    /*if(!param){
-      this.dataSource.unshift(data);
-    }*/
+    if(this.lastAction == 1){ /*nuevo registro */
+      this.dataSource.unshift(data)
+    }
+      /*editar registro */
+    if(this.lastAction == 2){ this.updateTable(data) }
+    /*eliminar registro */
+    if(this.lastAction == 3){ this.deleteRowtable(data) }
   }
 
   updateTable(data){
-   const actualizar = this.dataSource.map(item =>{
-      if(data.id === item.id){ item = data;  return item; }
+   //const theKey = this.pkey===undefined ? 'id' : this.pkey;
+   const theKey = this.pkey;
+   const actualizar = this.dataSource.map(item =>{    
+      if(data[theKey] === item[theKey]){ item = data;  return item; }
       return item;
     })
     this.dataSource = actualizar;
+    this.exportarSource();
+  }
+  deleteRowtable(data){
+    //const theKey = this.pkey===undefined ? 'id' : this.pkey;
+    const theKey = this.pkey;
+    this.dataSource = this.dataSource.filter(obj => obj[theKey] !== data[theKey]);
   }
 
   loadTableData(url){
-    console.log("el objeto a enviar en loadtabledata",this.paramSearchToObject);
-    //this.paramSearchToObject['fecha_nacimiento']='13/03/2020';
     this.isSearching = true;
     this._BgtableService.getLista(url, this.paramSearchToObject)
      .subscribe(
@@ -186,6 +239,7 @@ export class BgtableComponent implements OnInit {
          this.totalRecords = res.total;
          this.from = res.from;
          this.to = res.to;
+         this.exportarSource();
        },
        (error:any) => {
              console.log("ha ocurrido un error en bgtable component ");

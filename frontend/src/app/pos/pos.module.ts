@@ -7,7 +7,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { PosRoutingModule } from './pos-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { MaterialModule } from './../material/material.module';
+//import { MaterialModule } from './../material/material.module';
 
 //import { FilterforPipe } from './../global/pipes/filterfor';
 
@@ -29,6 +29,12 @@ import { CategoriasService } from './components/categorias/categorias.service';
 import { NewcategoriaComponent } from './components/categorias/crear/newcategoria.component';
 import { NewproductoComponent } from './components/productos/crear/newproducto.component';
 import { NewClienteComponent } from './components/clientes/crear/new-cliente.component';
+import { ImpuestoComponent } from './components/administracion/impuestos/impuesto.component';
+import { AdministracionComponent } from './components/administracion/administracion/administracion.component';
+import { NewImpuestoComponent } from './components/administracion/impuestos/crear/new-impuesto.component';
+import { InventarioComponent } from './components/administracion/inventario/inventario.component';
+import { ProveedorComponent } from './components/administracion/proveedor/proveedor.component';
+import { NewProveedorComponent } from './components/administracion/proveedor/crear/new-proveedor.component';
 /*import { TableCategoriaComponent } from './components/categorias/table-categoria.component';
 import { TablevaluePipe } from './components/categorias/tablevalue.pipe';
 import { PaginationComponent } from './components/categorias/pagination.component'; */
@@ -49,7 +55,7 @@ import { PaginationComponent } from './components/categorias/pagination.componen
                 CrearventaComponent, 
                 ReporteventaComponent, 
                 NewcategoriaComponent, 
-                NewproductoComponent, NewClienteComponent, 
+                NewproductoComponent, NewClienteComponent, ImpuestoComponent, AdministracionComponent, NewImpuestoComponent, InventarioComponent, ProveedorComponent, NewProveedorComponent, 
                 /*TableCategoriaComponent, 
                 TablevaluePipe, 
                 PaginationComponent,*/

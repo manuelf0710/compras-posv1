@@ -18,11 +18,27 @@ export class ProductosService {
          return retorno;
       }));
     }
+    public getListaPrecios(data){
+      if(data.id==null){
+        return this._http.post<any>(`${environment.apiUrl}/pos/productosPrecios`,data)
+      }else{
+        return this._http.get<any>(`${environment.apiUrl}/pos/productosPrecios/`+data.id)
+      }
+    }
+    public guardarListaPrecios(data) {
+      return this._http.post<any>(`${environment.apiUrl}/pos/productosPrecios`,data)
+    }
     public guardar(data){  
-      if(data.id == null){
+      if(data.producto.id == null){
           return this._http.post<any>(`${environment.apiUrl}/pos/productos`,data);    
         }else{
-        return this._http.put<any>(`${environment.apiUrl}/pos/productos/`+data.id, data);
+        return this._http.put<any>(`${environment.apiUrl}/pos/productos/`+data.producto.id, data);
         }     
   }
+  eliminar(id) {
+    return this._http.delete<any>(`${environment.apiUrl}/pos/productos/` + id);
+  }
+  eliminarPrecio(id) {
+    return this._http.delete<any>(`${environment.apiUrl}/pos/productosPrecios/` + id);
+  }   
 }  

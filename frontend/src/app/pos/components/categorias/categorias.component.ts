@@ -1,16 +1,14 @@
-import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA, ViewEncapsulation } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Component, OnInit, ViewChild, CUSTOM_ELEMENTS_SCHEMA, ViewEncapsulation } from '@angular/core';
+//import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-//import { map } from 'rxjs/operators';
-//import {Observable} from 'rxjs';
-//import { environment } from './../../../../environments/environment';
+import { BgtableComponent } from './../../../shared/components/bgtable/bgtable.component';
 import { Categoria } from './modelcategoria';
 
 import { CategoriasService } from './categorias.service';
 import { NewcategoriaComponent } from './crear/newcategoria.component';
-
-//services
-//import { UtilService } from './../../../global/services/util.service';
+import { environment } from './../../../../environments/environment';
+import { UtilService } from './../../../shared/services/util.service';
+import { ToastService } from './../../../shared/services/toast.service';
 
 
 @Component({
@@ -21,16 +19,45 @@ import { NewcategoriaComponent } from './crear/newcategoria.component';
 })
 export class CategoriasComponent implements OnInit {
   //public categorias : Observable<Categoria[]>;
+  @ViewChild(BgtableComponent) dataTableReload: BgtableComponent;
+  buttons =  {
+    acciones: {
+      'edit': true,
+      'delete': true,
+      'new': true
+      },
+    exports: [],
+  }; 
+  columns=[
+    {
+      title : 'Categoría',
+      data:'nombre',
+      orderable: true,
+      searchable:true,
+      type:'text'
+    },
+  ]  
   public categorias :Categoria[] = [];
   //public categorias:[];
   public loading: boolean;
   public categoriasearch: string = '';
-  
 
-  constructor(private _http: HttpClient,
+  tableConfig = {
+    buttons: this.buttons,
+    listado_seleccion : true,
+    columns : this.columns,
+    url     : environment.apiUrl+'/pos/categoriaslist',
+    globalSearch: true,
+    rowSearch:false,
+    advancedSearch: false,
+    paginatorPosition: 'bottom',
+  }
+
+  constructor(//private _http: HttpClient,
              private _categoriaService: CategoriasService,
              private modalService: NgbModal,
-             //private _UtilService: UtilService
+             private _UtilService: UtilService,
+             private _ToastService: ToastService
              
              ) { 
               this.loading = true;  
@@ -45,8 +72,8 @@ export class CategoriasComponent implements OnInit {
       }
     );
     */
-   this.loadCategorias();
   }
+  /*
   loadCategorias(){
     this.loading = true;
     this._categoriaService.getCategorias()
@@ -62,9 +89,9 @@ export class CategoriasComponent implements OnInit {
          this.loading = false 
         }
      )
-  }
+  }*/
   
-  public agregarCategoria(){
+ public agregarCategoria(ev){
     const modalRef = this.modalService.open(NewcategoriaComponent,{
       backdrop: 'static',
       size: 'lg',
@@ -73,7 +100,7 @@ export class CategoriasComponent implements OnInit {
   
     modalRef.result.then((result) => {
       if(result.status == 'ok'){
-        this.loadCategorias();
+        this.dataTableReload.reload(result.data.data);
       }
     }).catch((error) => {
     });   
@@ -81,7 +108,7 @@ export class CategoriasComponent implements OnInit {
 
   public editarCategoria(categoria){
     const modalRef = this.modalService.open(NewcategoriaComponent,{
-      backdrop: 'static',
+      //backdrop: 'static',
       size: 'lg',
       keyboard: false
   });
@@ -90,10 +117,33 @@ export class CategoriasComponent implements OnInit {
   
   modalRef.result.then((result) => {
     if(result.status == 'ok'){
-      this.loadCategorias();
+      this.dataTableReload.reload(result.data.data);
+      this._ToastService.success('Registro editado correctamente');
     }
   }).catch((error) => {
   });  
+  }
+  eliminar(data){
+    this._UtilService.confirm({ title:'Eliminar Registro', message: 'Seguro que desea eliminar este registro?' }).then(
+      () => {
+        //console.log('deleting...');
+        this._categoriaService.eliminar(data.id)
+        .subscribe(
+          (result:any)=>{
+            if(result['code']==200){
+              this.dataTableReload.reload(result.data);
+              this._ToastService.success(result.msg+' Correctamente');
+            }
+          },
+          (error)=>{
+            console.log("el error fue ",error);
+            
+          }
+        )
+      },
+      () => {
+        //console.log('not deleting...');
+      });
   }
 
 }

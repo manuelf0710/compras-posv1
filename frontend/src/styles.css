@@ -1,4 +1,9 @@
-/* You can add global styles to this file, and also import other style files */
+/* You can add global styles to this file, and also import other style files
+deeppurple-amber.css
+indigo-pink.css
+pink-bluegrey.css
+purple-green.css
+ */
 @import '@angular/material/prebuilt-themes/pink-bluegrey.css';
 /*html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }*/
@@ -33,3 +38,16 @@ app-datatablescustom .form-group{
 .fz-11{ font-size:11px;}
 .fz-12{ font-size:12px;}
 .fz-13{ font-size:13px;}
+
+.modal-header{
+	background:#dc3545!important;
+	color:#f8f9fa!important
+}
+.modal-header .close{
+	color:#f8f9fa!important
+}
+.border-top-success{border-top:solid 5px #8bc34a;}
+.border-top-warning{ border-top:solid 5px #FF9800;}
+.border-top-primary{ border-top:solid 5px #2196f3;}
+.border-top-danger{ border-top:solid 5px #f98787;}
+.border-top-info{ border-top:solid 5px #a0f1f1;}

@@ -52,13 +52,13 @@ import { HomeComponent } from './home/home/home.component';
     HttpClientModule,
     AppRoutingModule,
     SharedModule.forRoot(),
-    BreadcrumbModule   
-
+    BreadcrumbModule ,
   ],
   exports:[
     FormsModule,
     ReactiveFormsModule,
-    MaterialModule
+    MaterialModule,
+    
   ],
   providers: [
     NgbActiveModal,

@@ -38,6 +38,10 @@ export class CategoriasService {
       return this._http.put<any>(`${environment.apiUrl}/pos/categorias/`+data.id, data);
     }
   }
+
+  eliminar(id) {
+    return this._http.delete(`${environment.apiUrl}/pos/categorias/` + id);
+  } 
   
 }
 

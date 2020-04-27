@@ -15,7 +15,11 @@ class ClienteController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function listado(Request $request)
+    public function buscarcliente(Request $request)
+    {
+		
+	}
+	public function listado(Request $request)
     {
         $pageSize = $request->get('pageSize');
 		$pageSize == '' ? $pageSize = 20 : $pageSize;
@@ -23,8 +27,7 @@ class ClienteController extends Controller
         $nombre = $request->get('nombre');
         $documento = $request->get('documento');
         $email = $request->get('email');
-        $globalSearch = $request->get('globalsearch');
-		
+        $globalSearch = $request->get('globalsearch');		
 		if($globalSearch != ''){
 			$response = Cliente::withoutTrashed()->orderBy('id', 'desc')
 			->globalSearch($globalSearch)
@@ -100,6 +103,7 @@ class ClienteController extends Controller
 			$modelo->save();
 		  	$response = array(
 			  'status' => 'ok',
+			  'code' => 200,
 			  'data'   => $modelo,
 			  'msg'    => 'Guardado'
 			);
@@ -160,6 +164,7 @@ class ClienteController extends Controller
 			$modelo->save();
 		  	$response = array(
 			  'status' => 'ok',
+			  'code' => 200,
 			  'data'   => $modelo,
 			  'msg'    => 'Actualizado',
 			);
@@ -181,6 +186,21 @@ class ClienteController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $find = Cliente::find($id);
+		if (! empty($find)) {
+            $find->delete();
+            $response = [
+                'status' => 'success',
+                'code' => 200,
+                'data' => $find,
+				'msg'  => 'Registro eliminado'
+            ];			
+		}else{
+		    $response = [
+                'status' => 'error',
+                'msg' => "Se ha presentado un error",
+            ];
+		}
+		return response()->json($response);	
     }
 }

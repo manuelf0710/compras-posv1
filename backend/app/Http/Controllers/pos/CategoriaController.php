@@ -25,6 +25,25 @@ class CategoriaController extends Controller
 		return datatables()->eloquent($response)
             ->toJson();       
     }
+    public function listado(Request $request)
+    {
+        $pageSize = $request->get('pageSize');
+		$pageSize == '' ? $pageSize = 20 : $pageSize;
+		
+        $categoria = $request->get('categoria');
+        $globalSearch = $request->get('globalsearch');
+		
+		if($globalSearch != ''){
+			$response = Categoria::withoutTrashed()->orderBy('id', 'desc')
+			->globalSearch($globalSearch)
+			->paginate($pageSize);		
+		}else{
+			$response = Categoria::withoutTrashed()->orderBy('id', 'desc')
+			->categoria($categoria)
+			->paginate($pageSize);
+		}						
+		return response()->json($response); 		
+	}		
 
     /**
      * Show the form for creating a new resource.
@@ -109,6 +128,21 @@ class CategoriaController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $find = Categoria::find($id);
+		if (! empty($find)) {
+            $find->delete();
+            $response = [
+                'status' => 'success',
+                'code' => 200,
+                'data' => $find,
+				'msg'  => 'Registro eliminado'
+            ];			
+		}else{
+		    $response = [
+                'status' => 'error',
+                'msg' => "Se ha presentado un error",
+            ];
+		}
+		return response()->json($response);	
     }
 }

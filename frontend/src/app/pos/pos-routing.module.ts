@@ -11,6 +11,10 @@ import { AuthGuard } from './../auth/guards/auth.guard';
 import { CategoriasComponent } from './components/categorias/categorias.component';
 import { NewcategoriaComponent } from './components/categorias/crear/newcategoria.component';
 import { VentasComponent } from './components/ventas/ventas.component';
+import { AdministracionComponent } from './components/administracion/administracion/administracion.component';
+import { ImpuestoComponent } from './components/administracion/impuestos/impuesto.component';
+import { InventarioComponent } from './components/administracion/inventario/inventario.component';
+import { ProveedorComponent } from './components/administracion/proveedor/proveedor.component';
 
 
 
@@ -98,26 +102,98 @@ const routes: Routes = [
      },
      {
       path: 'ventas',
-      component: VentasComponent,
+      //component: VentasComponent,
       canActivate: [AuthGuard],
       data :{
         breadcrumb: {
           label:'ventas',
           info:{icon: 'fa fa-caret-square-o-up', iconType: 'bootstrap', label:'ventas' }
         }   
-      }      
-     },
+      },
+      children:[
+        {
+          path: '',
+          component: VentasComponent,
+          canActivate: [AuthGuard],
+          data: {
+                  breadcrumb: {
+                    label: 'ventas',
+                    info:{ icon: 'fa fa-caret-square-o-up', iconType: 'bootstrap', label:'ventas' } 
+                  }
+                },
+        },
+        {
+          path: 'crear',
+          component: CrearventaComponent,
+          canActivate: [AuthGuard],
+          data: {
+                  breadcrumb: {
+                    label: 'crear',
+                    info:{ icon: 'fa fa-caret-square-o-up', iconType: 'bootstrap', label:'Crear' } 
+                  }
+                },
+      },                
+      ]      
+     },  
+     
      {
-      path: 'crearventa',
-      component: CrearventaComponent,
+      path: 'administracion',
+      //component: VentasComponent,
       canActivate: [AuthGuard],
       data :{
         breadcrumb: {
-          label:'crear venta',
-          info:{icon: 'fa fa-caret-square-o-up', iconType: 'bootstrap', label:'crear venta' }
-        }  
-      }
-     },     
+          label:'administracion',
+          info:{icon: 'fa fa-caret-square-o-up', iconType: 'bootstrap', label:'administracion' }
+        }   
+      },
+      children:[
+        {
+          path: '',
+          component: AdministracionComponent,
+          canActivate: [AuthGuard],
+          data: {
+                  breadcrumb: {
+                    label: 'Administracion',
+                    info:{ icon: 'fa fa-caret-square-o-up', iconType: 'bootstrap', label:'administracion' } 
+                  }
+                },
+        }, 
+        {
+          path: 'impuestos',
+          component: ImpuestoComponent,
+          canActivate: [AuthGuard],
+          data: {
+                  breadcrumb: {
+                    label: 'impuestos',
+                    info:{ icon: 'fa fa-caret-square-o-up', iconType: 'bootstrap', label:'impuestos' } 
+                  }
+                },
+        },                       
+        {
+          path: 'inventario',
+          component: InventarioComponent,
+          canActivate: [AuthGuard],
+          data: {
+                  breadcrumb: {
+                    label: 'Inventario',
+                    info:{ icon: 'fa fa-caret-square-o-up', iconType: 'bootstrap', label:'Inventario' } 
+                  }
+                },
+        },
+        {
+          path: 'proveedores',
+          component: ProveedorComponent,
+          canActivate: [AuthGuard],
+          data: {
+                  breadcrumb: {
+                    label: 'Proveedores',
+                    info:{ icon: 'fa fa-caret-square-o-up', iconType: 'bootstrap', label:'Proveedores' } 
+                  }
+                },
+        },        
+      ]      
+     },      
+
      {
       path: 'repventa',
       component: ReporteventaComponent,

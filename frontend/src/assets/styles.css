@@ -70,7 +70,7 @@ snackbar-error .mat-simple-snackbar {
   font-size: 1.5em;
 }
 .mat-sidenav-content{
-  padding-top: 80px;
+  margin-top: 80px;
 }
 .progress-bar-container {
   height: 2px;
@@ -167,6 +167,15 @@ a.list-group-item:hover, button.list-group-item:hover {
   color: #fff !important;
   background-color: #3f51b5 !important;
   border-color: #296ca5;
+}
+.nav-item > .active{
+    border-top: solid 4px #dc3545 !important;
+    background: none !important;
+    color: #000000 !important;
+}
+.tab-content > .active{
+	background: none !important;
+	color: #000000 !important;
 }
 .mat-list-item-content:hover{
   background:#3f51b5;

@@ -83,12 +83,12 @@ export class NewClienteComponent implements OnInit {
           if(res.status=='ok'){
             this.respuesta = {status: 'ok', data:res}
             this._activeModal.close(this.respuesta);
-            this._ToastService.show('<i class="fa fa-info-circle fa-2x"></i> '+' Cliente '+res.msg+' correctamente', { classname: 'bg-success text-light', delay: 6000 });
+            this._ToastService.success('Cliente '+res.msg+' correctamente');
           }
           if(res.status=='error'){
             if(res.msg.documento){
              let messageError = this._ToastService.errorMessage(res.msg);
-              this._ToastService.show('<i class="fa fa-info-circle fa-2x"></i> '+messageError, { classname: 'bg-danger text-light', delay: 10000 });
+              this._ToastService.danger(messageError);
 
               //console.log("la template ",this.dangerTpl);
               //this._ToastService.show(this.dangerTpl, { classname: 'bg-danger text-light', delay: 15000 });

@@ -1,55 +1,8 @@
-<!--<app-datatablescustom [dataSource]="productos" [columns]="columns" [acciones]="acciones" (editarAction)="editarProducto($event)" [url_datatable] = "" ></app-datatablescustom>-->
-<!--<h2>Administrar Productos</h2>-->
-<div class="row">    
-    <div class="col-md-12">
-        <button placement="right" ngbTooltip="Tooltip on right" class="float-right btn btn-primary btn-sm mb-2" (click)="agregarProducto();"><i class="fa fa-plus-circle" ></i> Agregar Producto</button>
-    </div>
-</div>
-<app-datatablescustom [datatables_config]="datatables_config" (editarAction)="editarProducto($event)"></app-datatablescustom>
-<!--
-    <app-loading *ngIf="loading"></app-loading>
-    <div *ngIf="!loading">
-        <div class="row">
-            <div class="col-md-12">
-                <button class="btn btn-primary mb-2" (click)="agregarProducto();"><i class="fa fa-plus-circle" ></i> Agregar Producto</button>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12 col-lg-12 ">
-                  <input style="width:350px;" type="text" placeholder="Busca Productos"  [(ngModel)]="productosearch" id="productosearch" name="productosearch" class="rounded float-right form-control mb-3" >
-            </div>
-          </div>
-        <table class="table table-hover table-sm">
-            <thead class="thead-dark">
-                <th>#</th>
-                <th width="150"></th>
-                <th>Imágen</th>
-                <th>Código</th>
-                <th>Descripción</th>
-                <th>Categoría</th>
-                <th>stock</th>
-                <th>Precio Compra</th>
-                <th>Precio Venta</th>
-                <th>Agregado</th>
-            </thead>
-            <tbody>
-                <tr *ngFor="let producto of productos | filterfor : { descripcion: productosearch}: false ; let i = index ">
-                    <td>{{i+1}}</td>
-                    <td>
-                        <button class="btn btn-warning" (click)="editarProducto(producto)"><i class="fa fa-pencil"></i></button>&nbsp;
-                        <button class="btn btn-danger"><i class="fa fa-times"></i></button>
-                    </td>
-                    <td>
-                        <img [src]="api_url+'/'+producto.imagen" alt="" width="40">
-                    </td>
-                    <td>{{producto.codigo}}</td>
-                    <td>{{producto.descripcion}}</td>
-                    <td>{{producto.categoria.nombre}}</td>
-                    <td>{{producto.stock}}</td>
-                    <td>{{producto.precio_compra | currency}}</td>
-                    <td>{{producto.precio_venta | currency}}</td>
-                    <td>{{producto.created_at}}</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>-->
+<app-loading *ngIf="loading"></app-loading>
+<app-bgtable 
+[tableConfig]="tableConfig" 
+[customFilters]="customFilters" 
+(editarAction)="editarProducto($event)" 
+(nuevoAction)="agregarProducto($event)" 
+(eliminarAction)="eliminar($event)" 
+*ngIf="!loading" ></app-bgtable>

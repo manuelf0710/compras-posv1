@@ -31,7 +31,7 @@ class Cliente extends Model
             {
                 return [
                     'nombre' => 'required|string',
-                    'nombre' => 'required|string|max:80'
+                    'documento' => 'required|integer|unique:clientes'
                 ];
             }
             case 'PUT':

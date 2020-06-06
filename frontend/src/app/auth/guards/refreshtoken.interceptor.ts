@@ -12,7 +12,7 @@ export class RefreshTokenInterceptor implements HttpInterceptor {
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(request).pipe(catchError(err => {
-            console.log('status '+err.status);
+            console.log('status en refreshtoken interceptor '+err.status);
             if (err.status === 500) {
                 if (err.error.message == "The token has been blacklisted") {
                     this.authenticationService.logout();

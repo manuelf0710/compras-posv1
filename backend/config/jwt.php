@@ -101,6 +101,7 @@ return [
     |
     */
 
+    //'ttl' => env('JWT_TTL', 2),
     'ttl' => env('JWT_TTL', 2880),
 
     /*
@@ -121,6 +122,7 @@ return [
     */
 
     'refresh_ttl' => env('JWT_REFRESH_TTL', 20160),
+    //'refresh_ttl' => env('JWT_REFRESH_TTL', 4),
 
     /*
     |--------------------------------------------------------------------------

@@ -24,12 +24,12 @@ class Proveedor extends Model
 	
 	public static $customMessages = [
     	'required' => 'Cuidado!! el campo :attribute no puede ser vacío',
-    	'unique' => 'Error! el valor de :attribute ya se encuentra registrado',
+    	'unique' => 'Error! el valor de :attribute ya se encuentra almacenado',
     	'max' => 'Error! el valor de :attribute supero el tope permitido',
 		'integer' => 'Error! el valor de :attribute debe ser un número sin comas ni puntos'
 	];	
 	
-	public static function rules(Request $request, $id = null)
+	public static function rules(Request $request, $reg = null, $nom = null)
     {
 		
      	$rules = [
@@ -41,11 +41,13 @@ class Proveedor extends Model
         {
             case 'POST':
             {
- 				return array_merge( $rules, ['registro' => 'required|unique:proveedores', ] );
+ 				return array_merge( $rules, ['registro' => 'required|unique:proveedores', 
+											 'nombre' => 'required|unique:proveedores' ] );
             }
             case 'PUT':
             {
-				return array_merge( $rules, ['registro' => 'required|unique:proveedores,id,'. $id, ] );
+				return array_merge( $rules, ['registro' => 'required|unique:proveedores,id,'. $reg, 
+											 'nombre' => 'required|unique:proveedores,id,'. $nom ] );
             }
             default:break;
         }

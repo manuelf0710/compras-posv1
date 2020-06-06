@@ -117,6 +117,7 @@ class ProductoController extends Controller
 			$producto->stock = $request->producto['stock'];
 			$producto->precio_compra = $request->producto['precio_compra'];
 			$producto->precio_venta = $request->producto['precio_venta'];
+			$producto->precio_ventaimpuesto = $request->producto['precio_ventaimpuesto'];
 			$producto->porcentaje = $request->producto['porcentaje'];
 			$producto->imagen = $request->producto['imagen'];			
 			$producto->save();

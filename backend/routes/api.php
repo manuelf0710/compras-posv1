@@ -78,13 +78,16 @@ Route::group(['middleware' => ['jwt.auth']], function () {
 		
 		Route::get('administracionpos', 'ModuloController@administracionPos');
 		Route::post('impuestoslist', 'pos\administracion\ImpuestoController@listado');
-		//Route::get('impuestoslist', 'pos\administracion\ImpuestoController@listado');
+		Route::get('impuestoslist', 'pos\administracion\ImpuestoController@listado');
 		Route::post('impuestos', 'pos\administracion\ImpuestoController@store');
 		Route::put('impuestos/{id}', 'pos\administracion\ImpuestoController@update');
 		Route::delete('impuestos/{id}', 'pos\administracion\ImpuestoController@destroy');
 		
 		Route::post('proveedoreslist', 'pos\administracion\ProveedorController@listado');
-		//Route::get('proveedoreslist', 'pos\administracion\ProveedorController@listado');		
+		//Route::get('proveedoreslist', 'pos\administracion\ProveedorController@listado');
+		Route::post('proveedores', 'pos\administracion\ProveedorController@store');		
+		Route::put('proveedores/{id}', 'pos\administracion\ProveedorController@update');		
+		Route::get('dataformproveedor', 'pos\administracion\ProveedorController@dataformproveedor');		
 
 		Route::get('inventariodata', 'pos\administracion\InventarioController@inventariodata');
 

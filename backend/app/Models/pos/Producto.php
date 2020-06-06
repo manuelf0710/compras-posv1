@@ -10,12 +10,11 @@ use Illuminate\Http\Request;
 class Producto extends Model
 {
 	use Notifiable;
-    //protected $table = 'productos';
     public $timestamps = true;
     use SoftDeletes;
 	
     protected $fillable = [
-        'codigo', 'descripcion', 'stock', 'precio_compra', 'precio_venta', 'imagen'
+        'codigo', 'descripcion', 'stock', 'precio_compra', 'precio_venta', 'precio_ventaimpuesto', 'imagen'
     ];	
 
     protected $dates = ['deleted_at'];
@@ -37,6 +36,7 @@ class Producto extends Model
         	'stock' => 'required',
         	'precio_compra' => 'required',
         	'precio_venta' => 'required',
+        	'precio_ventaimpuesto' => 'required',
     	];		
         switch( $request->method() )
         {

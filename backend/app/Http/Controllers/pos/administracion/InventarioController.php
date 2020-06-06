@@ -18,12 +18,11 @@ class InventarioController extends Controller
      */
     public function index()
     {
-		
     }
+
 	public function inventariodata(){
 		$razones = Lista::withoutTrashed()->where('clase_lista_id','=','1')->get();
-		$almacenes = Lista::withoutTrashed()->where('clase_lista_id','=','2')->get();
-		
+		$almacenes = Lista::withoutTrashed()->where('clase_lista_id','=','2')->get();		
 		$response = array(
 						"razones" => $razones,
 						"almacenes" => $almacenes

@@ -12,12 +12,17 @@ export class ErrorInterceptor implements HttpInterceptor {
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(request).pipe(catchError(err => {
-            console.log('status '+err.status);
+            console.log('status in error interceptor '+err.status);
+            console.log('the message on errorinterceptor.ts '+err.error.message);
             if (err.status === 500) {
                 if (err.error.message == "The token has been blacklisted") {
                     this.authenticationService.logout();
                     location.reload(true);
-                }                
+                }
+                if (err.error.message == "Token has expired and can no longer be refreshed") {
+                    this.authenticationService.logout();
+                    location.reload(true);
+                }                                
             }
             if (err.status === 401) {
 

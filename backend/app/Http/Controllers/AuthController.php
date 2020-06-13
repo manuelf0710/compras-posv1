@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 use App\Modulo; /* entitie model */
-use App\ModuloLink; /* entitie model */
+use App\LinkModulo; /* entitie model */
 use Tymon\JWTAuth\Facades\JWTAuth;  /* or */
 //use JWTAuth;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -15,13 +15,13 @@ class AuthController extends Controller
 	
 	public function getSubLinks($id_link){
 		$response = [];
-		$response = ModuloLink::withoutTrashed()->where('padre',  $id_link)->where('estado', 1)->get();
+		$response = LinkModulo::withoutTrashed()->where('padre',  $id_link)->where('estado', 1)->get();
 		return $response;
 	}	
 	
 	public function getLinksModulo($id_modulo){
 		$response = [];
-		$response = ModuloLink::withoutTrashed()->where('modulo',  $id_modulo)->where('estado', 1)->whereNull('padre')->get();
+		$response = LinkModulo::withoutTrashed()->where('modulo',  $id_modulo)->where('estado', 1)->whereNull('padre')->get();
 		$i=0;
 		foreach($response  as $link){
 			$heading = false;

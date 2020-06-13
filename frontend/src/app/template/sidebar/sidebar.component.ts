@@ -20,6 +20,7 @@ import { UtilService } from './../../shared/services/util.service';
 })
 export class SidebarComponent implements OnInit {
   currentUser: User;
+  openMenu = '';
   //public urlapp:  Observable<any>;
   public urlapp;
   /*
@@ -33,7 +34,8 @@ export class SidebarComponent implements OnInit {
                         { heading:false, page: 'cards', url:'pagetres', icon:'sidebar-item-icon fa fa-file-text', hijos:[]}
                       ];
 */
-
+public pages_menu:{} = [];
+/*
   public pages_menu:{} = [
                         {heading:false, page: 'tabs sidebarcomponet', url:'pageuno', hijos:[]},
                         {heading:true, page: 'tables', url:'pagedos',hijos:[
@@ -51,7 +53,7 @@ export class SidebarComponent implements OnInit {
                                                                                                          ]
                         },
                         { heading:false, page: 'cards', url:'pagetres',  hijos:[]}
-                      ];
+                      ];*/
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -96,6 +98,10 @@ export class SidebarComponent implements OnInit {
         });
 
       });    
+  }
+
+  openSubmenu(id){
+    this.openMenu = this.openMenu == id ? '' : id;
   }
 
   ngAfterViewInit() {   

@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ModuloLink extends Model
+class LinkModulo extends Model
 {
 	use Notifiable;
 
-    protected $table = 'modulolinks';
+    protected $table = 'link_modulos';
     public $timestamps = true;
 
     use SoftDeletes;

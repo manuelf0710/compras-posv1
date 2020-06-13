@@ -4,18 +4,18 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Modulo; /* entitie model */
-use App\ModuloLink; /* entitie model */
+use App\LinkModulo; /* entitie model */
 
 class ModuloController extends Controller
 {
 	public function getHijos($id_modulo){
 		$response = [];
-		$response = ModuloLink::withoutTrashed()->where('modulo',  $id_modulo)->where('estado', 1)->get();
+		$response = LinkModulo::withoutTrashed()->where('modulo',  $id_modulo)->where('estado', 1)->get();
 		return $response;
 	}
 	public function getSubmenu($id_page){
 		$response = [];
-		$response = ModuloLink::withoutTrashed()->where('padre',  $id_page)->where('estado', 1)->get();
+		$response = LinkModulo::withoutTrashed()->where('padre',  $id_page)->where('estado', 1)->get();
 		return $response;
 	}	
 	public function administracionPos(){

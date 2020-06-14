@@ -5,6 +5,7 @@ import { BgtableComponent } from './../../../../shared/components/bgtable/bgtabl
 import { environment } from 'src/environments/environment';
 import { UtilService } from './../../../../shared/services/util.service';
 import { VentasService } from './../ventas.service';
+import { BarcodeComponent } from './../../../../shared/components/barcode/barcode.component';
 
 @Component({
   selector: 'app-crearventa',
@@ -13,6 +14,7 @@ import { VentasService } from './../ventas.service';
 })
 export class CrearventaComponent implements OnInit {
   @ViewChild(BgtableComponent) dataTableReload: BgtableComponent;
+  active = 1; /*default active read for barcode */
   buttons =  {
     acciones: {
       'copy': true

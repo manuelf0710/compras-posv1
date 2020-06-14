@@ -13,7 +13,7 @@ use Yajra\Datatables\Datatables;
 use App\Http\Controllers\Controller;
 use App\Models\pos\PrecioLista;
 
-class ProductoController extends Controller
+class AdministracionController extends Controller
 {
     /**
      * Display a listing of the resource.

@@ -40,5 +40,8 @@ export class ProductosService {
   }
   eliminarPrecio(id) {
     return this._http.delete<any>(`${environment.apiUrl}/pos/productosPrecios/` + id);
-  }   
+  } 
+  getProductByBarcode(codigo){
+    return this._http.get<any>(`${environment.apiUrl}/pos/productos/barras/`+codigo);
+  }  
 }  

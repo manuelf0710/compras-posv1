@@ -14,6 +14,6 @@
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('requerimiento/{requerimiento}', 'RequerimientoController@prueba');
+/*Route::get('requerimiento/{requerimiento}', 'RequerimientoController@prueba');
 Route::get('clienteslist', 'web\ClienteWebController@listado');
-Route::resource('requerimientos_lista', 'RequerimientoController');
+Route::resource('requerimientos_lista', 'RequerimientoController');*/

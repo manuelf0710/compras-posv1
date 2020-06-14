@@ -14,7 +14,7 @@ class Producto extends Model
     use SoftDeletes;
 	
     protected $fillable = [
-        'codigo', 'descripcion', 'stock', 'precio_compra', 'precio_venta', 'precio_ventaimpuesto', 'imagen'
+        'codigo', 'barras', 'descripcion', 'stock', 'precio_compra', 'precio_venta', 'precio_ventaimpuesto', 'imagen'
     ];	
 
     protected $dates = ['deleted_at'];

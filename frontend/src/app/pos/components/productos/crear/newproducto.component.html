@@ -48,15 +48,26 @@
                     </div>-->
                     <div class="form-group">
                     <div class="input-group">
-                        <div class="input-group-prepend" placement="top" ngbTooltip="Código">
+                        <div class="input-group-prepend" placement="top" ngbTooltip="Código Referencia">
                         <span class="input-group-text"><i class="fa fa-code"></i></span>
                         </div>
-                        <input [readonly]="loading || formulario.get('id').value " type="text" class="form-control form-control-sm" placeholder="Codigo" formControlName="codigo" maxlength="100"  >                         
+                        <input [readonly]="loading || formulario.get('id').value " type="text" class="form-control form-control-sm" placeholder="Codigo Referencia" formControlName="codigo" maxlength="100"  >                         
                     </div>  
                     <div *ngIf="formulario.get('codigo').errors && formulario.get('codigo').touched">
                         <small *ngIf="formulario.get('codigo').hasError('required')" class="form-text text-danger">el campo codigo no debe estar vacío.</small>
                     </div>                    
+                    </div>
+                    <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-prepend" placement="top" ngbTooltip="Código Barras">
+                        <span class="input-group-text"><i class="fa fa-barcode"></i></span>
+                        </div>
+                        <input [readonly]="loading || formulario.get('id').value " type="text" class="form-control form-control-sm" placeholder="Codigo Barras" formControlName="barras" maxlength="100"  >                         
                     </div>  
+                    <div *ngIf="formulario.get('codigo').errors && formulario.get('codigo').touched">
+                        <small *ngIf="formulario.get('codigo').hasError('required')" class="form-text text-danger">el campo codigo no debe estar vacío.</small>
+                    </div>                    
+                    </div>                      
                     <div class="form-group">
                     <div class="input-group">
                         <div class="input-group-prepend" placement="top" ngbTooltip="Descripción">

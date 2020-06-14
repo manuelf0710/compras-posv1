@@ -2,6 +2,7 @@ export interface Producto {
         id: number,
         categoria_id: number,
         codigo: String,
+        barras: String,
         descripcion: String,
         imagen: String,
         stock: number,

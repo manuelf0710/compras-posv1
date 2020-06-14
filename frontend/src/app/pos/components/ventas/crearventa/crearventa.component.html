@@ -21,25 +21,6 @@
               <div class="alert alert-danger text-center fa-2x font-weight-bold">
                 ${{ventaDetalles.total | number:'1.0-0' }}
               </div>
-              <!--<div class="input-group input-group-sm mb-3">
-                <div class="input-group-prepend">
-                  <span class="input-group-text" id="inputGroup-sizing-sm"><i class="fa fa-users"></i></span>
-                </div>
-                <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" placeholder="Cliente">
-                <div class="input-group-append">
-                  <span class="input-group-text" id="inputGroup-sizing-sm"><i class="fa fa-search"></i></span>
-                </div>                
-              </div>-->
-              <!--
-              <div class="input-group input-group-sm mb-3">
-                <div class="input-group-prepend">
-                  <span class="input-group-text" id="inputGroup-sizing-sm"><i class="fa fa-users"></i></span>
-                </div>
-                <input type="text" class="form-control form-control-sm">
-                <div class="input-group-append">
-                  <span class="input-group-text" id="inputGroup-sizing-sm"><i class="fa fa-search"></i></span>
-                </div>                
-              </div>-->
               <div class="row">
                 <div class="col-12">
                   <label for="">Cliente</label>
@@ -80,11 +61,25 @@
         </div>
     </div>
     <div class="col-lg-7 col-xs-12 col-12">
-        <div class="card">
-            <div class="card-body  border-top-warning">
-                <app-bgtable [tableConfig]="tableConfig"
-                    (copiarAction)="copiar($event)" class="fz-12"></app-bgtable>
-            </div>
-        </div>
+        <div class="col-md-12 col-12 card border-top-warning pt-3">
+            <ul ngbNav #nav="ngbNav" [(activeId)]="active" [destroyOnHide]='false' class="nav-tabs">
+                <li [ngbNavItem]="1">
+                    <a ngbNavLink>Código de Barras <i class="fa fa-barcode"></i></a>
+                    <ng-template ngbNavContent>
+                      <app-barcode (copiarAction)="copiar($event)"></app-barcode>
+                    </ng-template>
+                </li>
+                <li [ngbNavItem]="2" >
+                    <a ngbNavLink>Buscar Productos <i class="fa fa-product-hunt"></i></a>
+                    <ng-template ngbNavContent>
+                      <app-bgtable [tableConfig]="tableConfig"
+                                   (copiarAction)="copiar($event)" class="fz-12">
+                      </app-bgtable>
+                    </ng-template>
+                </li>
+            </ul>
+            <div [ngbNavOutlet]="nav" class="mt-2" style="min-height:300px;">div algo</div>
+        </div>        
+
     </div>
 </div>

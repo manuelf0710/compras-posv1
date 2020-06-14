@@ -85,6 +85,7 @@ initRegistroPrecio(){
     let id     = null;
     let categoria_id = null;
     let codigo = null;
+    let barras = null;
     let descripcion = null;
     let imagen = null;
     let stock = 1;
@@ -98,6 +99,7 @@ initRegistroPrecio(){
       id = this.data.id;
       categoria_id = this.data.categoria_id;
       codigo       = this.data.codigo;
+      barras       = this.data.barras;
       descripcion  = this.data.descripcion;
       imagen       = this.data.imagen;
       stock        = this.data.stock;
@@ -112,6 +114,7 @@ initRegistroPrecio(){
       id:[id],
       categoria_id : [categoria_id, [Validators.required]],
       codigo       : [codigo, [Validators.required]],
+      barras       : [barras],
       descripcion  : [descripcion, [Validators.required]],
       imagen       : [imagen],
       stock        : [stock,[Validators.required]],

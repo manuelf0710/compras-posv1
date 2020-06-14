@@ -3,13 +3,10 @@
 //namespace App\Http\Controllers;
 namespace App\Http\Controllers\pos;
 use Illuminate\Support\Facades\DB;
-//use Illuminate\Support\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-//use App\Producto; /* entitie model */
 use App\Models\pos\Producto;
 use Yajra\Datatables\Datatables;
-//use Validator;
 use App\Http\Controllers\Controller;
 use App\Models\pos\PrecioLista;
 
@@ -26,6 +23,7 @@ class ProductoController extends Controller
 		return datatables()->eloquent($response)
             ->toJson();
     }
+
 	public function storeproductoprecios($productosPreciosLista){
 		//$productosPreciosLista = $request->precioslista;
 		$producto_id = '';
@@ -71,7 +69,7 @@ class ProductoController extends Controller
      */
 	 
     public function listado(Request $request)
-    {
+    { 
         $pageSize = $request->get('pageSize');
 		$pageSize == '' ? $pageSize = 20 : $pageSize;
 		
@@ -113,6 +111,7 @@ class ProductoController extends Controller
 			$producto = new Producto();
 			$producto->categoria_id = $request->producto['categoria_id'];
 			$producto->codigo = $request->producto['codigo'];
+			$producto->barras = $request->producto['barras'];
 			$producto->descripcion = $request->producto['descripcion'];
 			$producto->stock = $request->producto['stock'];
 			$producto->precio_compra = $request->producto['precio_compra'];
@@ -181,6 +180,7 @@ class ProductoController extends Controller
 		 if(!($validator -> fails())){
 			$producto->categoria_id = $request->producto['categoria_id'];
 			$producto->codigo = $request->producto['codigo'];
+			$producto->barras = $request->producto['barras'];
 			$producto->descripcion = $request->producto['descripcion'];
 			$producto->stock = $request->producto['stock'];
 			$producto->precio_compra = $request->producto['precio_compra'];
@@ -249,4 +249,16 @@ class ProductoController extends Controller
 		}
 		return response()->json($response);	
     }
+    public function getBarcode($codigo)
+    {
+		/*$response = Producto::where('barras','=',$codigo)
+			->orwhere('codigo', '=', $codigo)
+			->get(); */
+		$response = DB::table('productos')
+					->where('barras','=',$codigo)
+					->orwhere('codigo', '=', $codigo)
+					->get();
+						
+		return response()->json($response); 
+	}		
 }

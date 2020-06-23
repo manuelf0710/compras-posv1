@@ -71,7 +71,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                 },
                 error => {
                     //this.error = error;					
-                    this.error = "mail or password is incorrect";					
+                    this.error = "Email o password incorrectos";
                     this.loading = false;
                 });
     }

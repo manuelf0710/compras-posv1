@@ -91,6 +91,7 @@ public pages_menu:{} = [];
               });
               if(!find){
                // this.authenticationService.currentMenu = this.pages_menu;
+			   this.pages_menu =  [];
               }
             } 
           }

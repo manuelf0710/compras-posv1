@@ -194,8 +194,7 @@ class ProductoController extends Controller
 			  'status' => 'ok',
 			  'code' => 200,
 			  'data'   => Producto::with('categoria','precioLista')->find( $id ),
-			  'msg'    => 'Actualizado',
-			  'algo' => 'folle  a Laura'
+			  'msg'    => 'Actualizado'
 			);
 		 }else{
 			 $response = array(

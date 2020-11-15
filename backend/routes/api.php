@@ -50,7 +50,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     'prefix' => 'pos',
 	], function () {
 		//Route::get('prueba', 'ModuloController@prueba');
-		Route::get('categorias', 'pos\CategoriaController@index')->name('categorias_index');;
+		Route::get('categorias', 'pos\CategoriaController@index')->name('categorias_index');
 		Route::post('categoriaslist', 'pos\CategoriaController@listado')->name('categorias_listado');
 		Route::post('categorias', 'pos\CategoriaController@store')->name('categorias_store');
 		Route::put('categorias/{id}', 'pos\CategoriaController@update')->name('categorias_update');

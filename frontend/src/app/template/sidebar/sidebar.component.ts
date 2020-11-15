@@ -82,6 +82,7 @@ public pages_menu:{} = [];
 			if(event instanceof NavigationEnd ){
               let modulo = event.url.split("/");
               let find = false;
+              console.log("The module ", event);
               if(modulo_menu){
               modulo_menu.forEach(element => {
                 if(element.url == modulo[1]){

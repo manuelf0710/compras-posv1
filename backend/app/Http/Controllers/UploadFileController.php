@@ -65,7 +65,7 @@ class UploadFileController extends Controller
 		
 		if($request->file){
 			//$is_uploaded = Storage::disk('public')->put('/uploads'.$getDirectory, $request->file);
-			$is_uploaded = Storage::disk('public')->putFileAs($upload_dir, $request->file, $random_name);;
+			$is_uploaded = Storage::disk('public')->putFileAs($upload_dir, $request->file, $random_name);
 		}
 		//$is_uploaded = $file_original_name->move(public_path().'/uploads/'.$getDirectory, $random_name);
 		if($is_uploaded){

@@ -43,7 +43,7 @@ Route::group([
 		Route::post('uploads', 'UploadFileController@store');
 	});
 
-Route::group(['middleware' => ['jwt.auth']], function () {
+//Route::group(['middleware' => ['jwt.auth']], function () {
 
 	
 	Route::group([
@@ -97,4 +97,4 @@ Route::group(['middleware' => ['jwt.auth']], function () {
 		
 		
 	});
-});
+//});
